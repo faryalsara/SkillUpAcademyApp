@@ -470,84 +470,84 @@ const styles = StyleSheet.create({
 
   // Success Modal Styles
   modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.55)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
+  flex: 1,
+  backgroundColor: 'rgba(15, 23, 42, 0.55)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 24,
+},
 
-  successModal: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 26,
-    alignItems: 'center',
-    elevation: 10,
-  },
+successModal: {
+  width: '85%',
+  maxWidth: 310,
+  backgroundColor: '#FFFFFF',
+  borderRadius: 20,
+  padding: 18,
+  alignItems: 'center',
+  elevation: 10,
+},
 
-  successIconContainer: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: '#DCFCE7',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 18,
-  },
+successIconContainer: {
+  width: 45,
+  height: 45,
+  borderRadius: 28,
+  backgroundColor: '#DCFCE7',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 12,
+},
 
-  successIcon: {
-    color: '#16A34A',
-    fontSize: 38,
-    fontWeight: 'bold',
-  },
+successIcon: {
+  color: '#16A34A',
+  fontSize: 25,
+  fontWeight: 'bold',
+},
 
-  successTitle: {
-    color: '#172554',
-    fontSize: 23,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
+successTitle: {
+  color: '#172554',
+  fontSize: 19,
+  fontWeight: 'bold',
+  marginBottom: 7,
+},
 
-  successMessage: {
-    color: '#64748B',
-    fontSize: 14,
-    lineHeight: 21,
-    textAlign: 'center',
-    marginBottom: 25,
-  },
+successMessage: {
+  color: '#64748B',
+  fontSize: 12,
+  lineHeight: 18,
+  textAlign: 'center',
+  marginBottom: 17,
+},
 
-  modalButtons: {
-    width: '100%',
-    gap: 12,
-  },
+modalButtons: {
+  width: '100%',
+  gap: 9,
+},
 
-  continueButton: {
-    backgroundColor: '#3157D5',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
+continueButton: {
+  backgroundColor: '#3157D5',
+  paddingVertical: 11,
+  borderRadius: 10,
+  alignItems: 'center',
+},
 
-  continueButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
+continueButtonText: {
+  color: '#FFFFFF',
+  fontSize: 13,
+  fontWeight: 'bold',
+},
 
-  viewCartButton: {
-    backgroundColor: '#EEF2FF',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
+viewCartButton: {
+  backgroundColor: '#EEF2FF',
+  paddingVertical: 11,
+  borderRadius: 10,
+  alignItems: 'center',
+},
 
-  viewCartButtonText: {
-    color: '#3157D5',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
+viewCartButtonText: {
+  color: '#3157D5',
+  fontSize: 13,
+  fontWeight: 'bold',
+},
 });
 
 export default CatalogueScreen;

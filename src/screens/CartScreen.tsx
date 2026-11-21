@@ -8,7 +8,6 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Alert,
   Modal,
 } from 'react-native';
 
@@ -28,18 +27,18 @@ const CartScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
 
   const [checkoutVisible, setCheckoutVisible] = useState(false);
+  const [removeVisible, setRemoveVisible] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
 
   const cartItems = useAppSelector(
     state => state.cart.items,
   );
 
-  // Calculate total price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
 
-  // Calculate total quantity
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
     0,
@@ -67,23 +66,26 @@ const CartScreen = ({ navigation }: any) => {
     }
   };
 
-  // Remove course
+  // Open remove confirmation modal
   const handleRemove = (id: number) => {
-    Alert.alert(
-      'Remove Course',
-      'Are you sure you want to remove this course?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Remove',
-          style: 'destructive',
-          onPress: () => dispatch(removeItem(id)),
-        },
-      ],
-    );
+    setSelectedCourse(id);
+    setRemoveVisible(true);
+  };
+
+  // Confirm course removal
+  const confirmRemove = () => {
+    if (selectedCourse !== null) {
+      dispatch(removeItem(selectedCourse));
+    }
+
+    setRemoveVisible(false);
+    setSelectedCourse(null);
+  };
+
+  // Cancel removal
+  const cancelRemove = () => {
+    setRemoveVisible(false);
+    setSelectedCourse(null);
   };
 
   // Render cart item
@@ -212,7 +214,6 @@ const CartScreen = ({ navigation }: any) => {
               </Text>
             </View>
 
-            {/* Checkout Button */}
             <Pressable
               style={styles.checkoutButton}
               onPress={() => setCheckoutVisible(true)}
@@ -225,6 +226,59 @@ const CartScreen = ({ navigation }: any) => {
         </>
       )}
 
+      {/* Custom Remove Confirmation Modal */}
+      <Modal
+        visible={removeVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={cancelRemove}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.removeModalCard}>
+
+            <Pressable
+              style={styles.closeButton}
+              onPress={cancelRemove}
+            >
+              <Text style={styles.closeText}>×</Text>
+            </Pressable>
+
+            <View style={styles.removeIconContainer}>
+              <Text style={styles.removeIcon}>🗑</Text>
+            </View>
+
+            <Text style={styles.removeModalTitle}>
+              Remove Course?
+            </Text>
+
+            <Text style={styles.removeModalMessage}>
+              Are you sure you want to remove this course from your cart?
+            </Text>
+
+            <View style={styles.removeModalButtons}>
+              <Pressable
+                style={styles.cancelButton}
+                onPress={cancelRemove}
+              >
+                <Text style={styles.cancelButtonText}>
+                  Cancel
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.confirmRemoveButton}
+                onPress={confirmRemove}
+              >
+                <Text style={styles.confirmRemoveText}>
+                  Remove
+                </Text>
+              </Pressable>
+            </View>
+
+          </View>
+        </View>
+      </Modal>
+
       {/* Custom Checkout Modal */}
       <Modal
         visible={checkoutVisible}
@@ -235,7 +289,6 @@ const CartScreen = ({ navigation }: any) => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalCard}>
 
-            {/* Close Button */}
             <Pressable
               style={styles.closeButton}
               onPress={() => setCheckoutVisible(false)}
@@ -243,12 +296,10 @@ const CartScreen = ({ navigation }: any) => {
               <Text style={styles.closeText}>×</Text>
             </Pressable>
 
-            {/* Shopping Icon */}
             <View style={styles.modalIcon}>
               <Text style={styles.bagIcon}>🛍️</Text>
             </View>
 
-            {/* Modal Heading */}
             <Text style={styles.modalTitle}>
               Order Summary
             </Text>
@@ -259,7 +310,6 @@ const CartScreen = ({ navigation }: any) => {
 
             <View style={styles.modalDivider} />
 
-            {/* Total Courses */}
             <View style={styles.modalRow}>
               <Text style={styles.modalLabel}>
                 Total Courses
@@ -270,7 +320,6 @@ const CartScreen = ({ navigation }: any) => {
               </Text>
             </View>
 
-            {/* Total Amount */}
             <View style={styles.modalRow}>
               <Text style={styles.modalLabel}>
                 Order Total
@@ -281,12 +330,9 @@ const CartScreen = ({ navigation }: any) => {
               </Text>
             </View>
 
-            {/* Continue Shopping */}
             <Pressable
               style={styles.modalButton}
-              onPress={() => {
-                setCheckoutVisible(false);
-              }}
+              onPress={() => setCheckoutVisible(false)}
             >
               <Text style={styles.modalButtonText}>
                 Continue Shopping
@@ -503,23 +549,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // Custom Modal Styles
-
+  // Shared modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(15, 23, 42, 0.65)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 25,
-  },
-
-  modalCard: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 25,
-    alignItems: 'center',
-    elevation: 12,
   },
 
   closeButton: {
@@ -536,6 +572,93 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: '#64748B',
     lineHeight: 27,
+  },
+
+  // Remove confirmation modal
+ 
+removeModalCard: {
+  width: '85%',
+  maxWidth: 310,
+  backgroundColor: '#FFFFFF',
+  borderRadius: 20,
+  padding: 18,
+  alignItems: 'center',
+  elevation: 10,
+},
+
+removeIconContainer: {
+  width: 55,
+  height: 55,
+  borderRadius: 28,
+  backgroundColor: '#FEE2E2',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: 2,
+  marginBottom: 12,
+},
+
+removeIcon: {
+  fontSize: 25,
+},
+
+removeModalTitle: {
+  fontSize: 19,
+  fontWeight: 'bold',
+  color: '#172554',
+},
+
+removeModalMessage: {
+  fontSize: 12,
+  color: '#64748B',
+  textAlign: 'center',
+  marginTop: 7,
+  marginBottom: 18,
+  lineHeight: 18,
+},
+
+removeModalButtons: {
+  flexDirection: 'row',
+  width: '100%',
+  gap: 10,
+},
+
+cancelButton: {
+  flex: 1,
+  backgroundColor: '#E2E8F0',
+  paddingVertical: 11,
+  borderRadius: 10,
+  alignItems: 'center',
+},
+
+cancelButtonText: {
+  color: '#334155',
+  fontSize: 13,
+  fontWeight: 'bold',
+},
+
+confirmRemoveButton: {
+  flex: 1,
+  backgroundColor: '#DC2626',
+  paddingVertical: 11,
+  borderRadius: 10,
+  alignItems: 'center',
+},
+
+confirmRemoveText: {
+  color: '#FFFFFF',
+  fontSize: 13,
+  fontWeight: 'bold',
+},
+
+
+  // Checkout modal styles
+  modalCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 12,
   },
 
   modalIcon: {
