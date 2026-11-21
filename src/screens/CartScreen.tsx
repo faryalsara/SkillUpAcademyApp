@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   View,
@@ -9,6 +9,7 @@ import {
   Pressable,
   StyleSheet,
   Alert,
+  Modal,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,6 +26,8 @@ import {
 
 const CartScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
+
+  const [checkoutVisible, setCheckoutVisible] = useState(false);
 
   const cartItems = useAppSelector(
     state => state.cart.items,
@@ -141,6 +144,7 @@ const CartScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
       {/* Header */}
       <View style={styles.header}>
         <Pressable
@@ -208,14 +212,10 @@ const CartScreen = ({ navigation }: any) => {
               </Text>
             </View>
 
+            {/* Checkout Button */}
             <Pressable
               style={styles.checkoutButton}
-              onPress={() =>
-                Alert.alert(
-                  'Checkout',
-                  `Your total amount is $${totalPrice.toFixed(2)}.`,
-                )
-              }
+              onPress={() => setCheckoutVisible(true)}
             >
               <Text style={styles.checkoutText}>
                 Proceed to Checkout
@@ -224,6 +224,83 @@ const CartScreen = ({ navigation }: any) => {
           </View>
         </>
       )}
+
+      {/* Custom Checkout Modal */}
+      <Modal
+        visible={checkoutVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCheckoutVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+
+            {/* Close Button */}
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setCheckoutVisible(false)}
+            >
+              <Text style={styles.closeText}>×</Text>
+            </Pressable>
+
+            {/* Shopping Icon */}
+            <View style={styles.modalIcon}>
+              <Text style={styles.bagIcon}>🛍️</Text>
+            </View>
+
+            {/* Modal Heading */}
+            <Text style={styles.modalTitle}>
+              Order Summary
+            </Text>
+
+            <Text style={styles.modalSubtitle}>
+              Here's a summary of your selected courses.
+            </Text>
+
+            <View style={styles.modalDivider} />
+
+            {/* Total Courses */}
+            <View style={styles.modalRow}>
+              <Text style={styles.modalLabel}>
+                Total Courses
+              </Text>
+
+              <Text style={styles.modalValue}>
+                {totalItems}
+              </Text>
+            </View>
+
+            {/* Total Amount */}
+            <View style={styles.modalRow}>
+              <Text style={styles.modalLabel}>
+                Order Total
+              </Text>
+
+              <Text style={styles.modalPrice}>
+                ${totalPrice.toFixed(2)}
+              </Text>
+            </View>
+
+            {/* Continue Shopping */}
+            <Pressable
+              style={styles.modalButton}
+              onPress={() => {
+                setCheckoutVisible(false);
+              }}
+            >
+              <Text style={styles.modalButtonText}>
+                Continue Shopping
+              </Text>
+            </Pressable>
+
+            <Text style={styles.modalFooter}>
+              Thank you for choosing SkillUp Academy!
+            </Text>
+
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 };
@@ -424,6 +501,124 @@ const styles = StyleSheet.create({
   shopButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+  },
+
+  // Custom Modal Styles
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 25,
+  },
+
+  modalCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 25,
+    alignItems: 'center',
+    elevation: 12,
+  },
+
+  closeButton: {
+    alignSelf: 'flex-end',
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F1F5F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  closeText: {
+    fontSize: 23,
+    color: '#64748B',
+    lineHeight: 27,
+  },
+
+  modalIcon: {
+    width: 75,
+    height: 75,
+    borderRadius: 38,
+    backgroundColor: '#E0E7FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 15,
+  },
+
+  bagIcon: {
+    fontSize: 35,
+  },
+
+  modalTitle: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    color: '#172554',
+  },
+
+  modalSubtitle: {
+    fontSize: 13,
+    color: '#64748B',
+    textAlign: 'center',
+    marginTop: 8,
+    lineHeight: 20,
+  },
+
+  modalDivider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#E2E8F0',
+    marginVertical: 22,
+  },
+
+  modalRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+
+  modalLabel: {
+    fontSize: 14,
+    color: '#64748B',
+  },
+
+  modalValue: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#172554',
+  },
+
+  modalPrice: {
+    fontSize: 21,
+    fontWeight: 'bold',
+    color: '#3157D5',
+  },
+
+  modalButton: {
+    width: '100%',
+    backgroundColor: '#3157D5',
+    paddingVertical: 16,
+    borderRadius: 13,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+
+  modalButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
+  modalFooter: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 17,
+    textAlign: 'center',
   },
 });
 
