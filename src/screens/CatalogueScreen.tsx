@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
   ActivityIndicator,
@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
+  Modal,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -26,9 +26,7 @@ import {
   setError,
 } from '../features/courses/coursesSlice';
 
-import {
-  addItem,
-} from '../features/cart/cartSlice';
+import { addItem } from '../features/cart/cartSlice';
 
 import {
   useAppDispatch,
@@ -43,9 +41,10 @@ const CatalogueScreen = ({ navigation }: any) => {
   const { courses, loading, error, isOffline } =
     useAppSelector(state => state.courses);
 
-  const cartItems = useAppSelector(
-    state => state.cart.items,
-  );
+  const cartItems = useAppSelector(state => state.cart.items);
+
+  const [successVisible, setSuccessVisible] = useState(false);
+  const [addedCourse, setAddedCourse] = useState<Course | null>(null);
 
   // Calculate total number of courses in cart
   const cartCount = cartItems.reduce(
@@ -98,14 +97,11 @@ const CatalogueScreen = ({ navigation }: any) => {
     loadCourses();
   }, [loadCourses]);
 
-  // Add course to cart
+  // Add course to cart and show custom popup
   const handleAddToCart = (course: Course) => {
     dispatch(addItem(course));
-
-    Alert.alert(
-      'Added to Cart',
-      `${course.title} has been added to your cart.`,
-    );
+    setAddedCourse(course);
+    setSuccessVisible(true);
   };
 
   // Render each course
@@ -231,6 +227,58 @@ const CatalogueScreen = ({ navigation }: any) => {
           }
         />
       )}
+
+      {/* Added to Cart Success Modal */}
+      <Modal
+        visible={successVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSuccessVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.successModal}>
+
+            {/* Success Icon */}
+            <View style={styles.successIconContainer}>
+              <Text style={styles.successIcon}>✓</Text>
+            </View>
+
+            <Text style={styles.successTitle}>
+              Added to Cart!
+            </Text>
+
+            <Text style={styles.successMessage}>
+              {addedCourse?.title
+                ? `${addedCourse.title} has been successfully added to your cart.`
+                : 'Your course has been added to your cart.'}
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <Pressable
+                style={styles.continueButton}
+                onPress={() => setSuccessVisible(false)}
+              >
+                <Text style={styles.continueButtonText}>
+                  Continue Shopping
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={styles.viewCartButton}
+                onPress={() => {
+                  setSuccessVisible(false);
+                  navigation.navigate('Cart');
+                }}
+              >
+                <Text style={styles.viewCartButtonText}>
+                  View Cart
+                </Text>
+              </Pressable>
+            </View>
+
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -417,6 +465,87 @@ const styles = StyleSheet.create({
 
   retryText: {
     color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+
+  // Success Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+
+  successModal: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 26,
+    alignItems: 'center',
+    elevation: 10,
+  },
+
+  successIconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#DCFCE7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+
+  successIcon: {
+    color: '#16A34A',
+    fontSize: 38,
+    fontWeight: 'bold',
+  },
+
+  successTitle: {
+    color: '#172554',
+    fontSize: 23,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  successMessage: {
+    color: '#64748B',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginBottom: 25,
+  },
+
+  modalButtons: {
+    width: '100%',
+    gap: 12,
+  },
+
+  continueButton: {
+    backgroundColor: '#3157D5',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  continueButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+
+  viewCartButton: {
+    backgroundColor: '#EEF2FF',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  viewCartButtonText: {
+    color: '#3157D5',
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });
