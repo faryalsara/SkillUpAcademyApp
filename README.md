@@ -1,97 +1,132 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# SkillUp Academy App
 
-# Getting Started
+A React Native mobile application that allows users to browse courses, add courses to a shopping cart, complete checkout, and view their order history.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- **Course Catalogue:** Browse available courses.
+- **Cart Management:** Add and remove courses and update item quantities.
+- **Cart Persistence:** Cart data is saved locally using AsyncStorage.
+- **Checkout:** Review the order total and place an order.
+- **API Integration:** Submit orders through a secure Vercel API proxy to ReqRes.
+- **Order History:** View previously placed orders, including course details, totals, dates, and order IDs.
+- **Order Persistence:** Order history is saved locally and remains available after restarting the app.
+- **State Management:** Redux Toolkit manages cart and order state.
+- **Navigation:** React Navigation provides navigation between the catalogue, cart, checkout, and orders screens.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Technology Stack
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+| Technology | Purpose |
+|---|---|
+| React Native | Mobile application development |
+| TypeScript | Type-safe application code |
+| Redux Toolkit | Application state management |
+| React Redux | Connecting React components to Redux |
+| AsyncStorage | Local cart and order persistence |
+| React Navigation | Screen navigation |
+| ReqRes API | Mock backend for order submission |
+| Vercel | Hosting the secure API proxy |
 
-```sh
-# Using npm
+## Project Setup
+
+### Requirements
+
+- Node.js 22.11.0 or later
+- npm
+- React Native development environment
+- Android Studio and an Android emulator, or a connected Android device
+
+Follow the [React Native environment setup guide](https://reactnative.dev/docs/set-up-your-environment) before running the application.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/faryalsara/SkillUpAcademyApp.git
+cd SkillUpAcademyApp
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start Metro
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 4. Run the Android application
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+Open another terminal in the project directory and run:
 
-### Android
-
-```sh
-# Using npm
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+## Order API Configuration
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+The application submits orders through a Vercel serverless API proxy rather than exposing the ReqRes API key inside the mobile application.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+**Request endpoint:**
 
-```sh
-bundle install
+```text
+POST https://skillup-api-proxy-gra76uwog-faryalsara.vercel.app/api/orders
 ```
 
-Then, and every time you update your native dependencies, run:
+The proxy:
 
-```sh
-bundle exec pod install
-```
+1. Receives the order details from the mobile application.
+2. Reads the private `REQRES_API_KEY` environment variable configured in Vercel.
+3. Adds the API key to the request headers.
+4. Forwards the order to the ReqRes API.
+5. Returns the API response to the mobile application.
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### Important security note
 
-```sh
-# Using npm
-npm run ios
+Never place the private ReqRes API key in the React Native application or commit it to GitHub. Configure it as a server-side environment variable in the Vercel project.
 
-# OR using Yarn
-yarn ios
-```
+## Data Persistence
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+The application uses AsyncStorage to save cart and order information locally on the device.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+- Cart data is restored when the application starts.
+- Successfully placed orders are added to the order history.
+- Saved orders remain available after closing and reopening the application.
 
-## Step 3: Modify your app
+## Order Placement Flow
 
-Now that you have successfully run the app, let's make changes!
+1. The user selects courses from the catalogue.
+2. Courses are added to the cart.
+3. The user reviews quantities and the total amount.
+4. The user proceeds to checkout.
+5. The application sends the order to the Vercel API proxy.
+6. The proxy forwards the request to ReqRes.
+7. After a successful response, the order is saved in Redux and AsyncStorage.
+8. The user can view the saved order in the Orders screen.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Available Commands
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+| Command | Description |
+|---|---|
+| `npm install` | Install project dependencies |
+| `npm start` | Start the Metro development server |
+| `npm run android` | Build and run the Android app |
+| `npm run ios` | Build and run the iOS app on macOS |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run Jest tests |
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Backend Note
 
-## Congratulations! :tada:
+ReqRes is used as a mock API service for testing order submission. The application stores its order history locally using AsyncStorage; this local history is separate from the mock API's records.
 
-You've successfully run and modified your React Native App. :partying_face:
+## Author
 
-### Now what?
+**Faryal Sara**
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- GitHub: [github.com/faryalsara](https://github.com/faryalsara)
 
-# Troubleshooting
+## License
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project was developed for learning and mobile application development practice.
