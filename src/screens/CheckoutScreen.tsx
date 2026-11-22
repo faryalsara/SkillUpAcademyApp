@@ -62,7 +62,7 @@ const CheckoutScreen = ({ navigation }: any) => {
       console.log('Order request body:', JSON.stringify(orderBody));
 
       const response = await fetch(
-        'https://reqres.in/api/orders',
+         'https://skillup-api-proxy-gra76uwog-faryalsara.vercel.app/api/orders',
         {
           method: 'POST',
           headers: {

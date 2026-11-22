@@ -152,8 +152,9 @@ const CatalogueScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
+      {/* Header */}
       <View style={styles.header}>
-        <View>
+        <View style={styles.headerTitleContainer}>
           <Text style={styles.headerTitle}>
             SkillUp Courses
           </Text>
@@ -163,20 +164,35 @@ const CatalogueScreen = ({ navigation }: any) => {
           </Text>
         </View>
 
-        <Pressable
-          style={styles.cartButton}
-          onPress={() => navigation.navigate('Cart')}
-        >
-          <Text style={styles.cartIcon}>🛒</Text>
+        {/* Header Actions */}
+        <View style={styles.headerActions}>
 
-          {cartCount > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>
-                {cartCount}
-              </Text>
-            </View>
-          )}
-        </Pressable>
+          {/* My Orders Button */}
+          <Pressable
+            style={styles.ordersButton}
+            onPress={() => navigation.navigate('Orders')}
+          >
+            <Text style={styles.ordersButtonText}>
+              My Orders
+            </Text>
+          </Pressable>
+
+          {/* Cart Button */}
+          <Pressable
+            style={styles.cartButton}
+            onPress={() => navigation.navigate('Cart')}
+          >
+            <Text style={styles.cartIcon}>🛒</Text>
+
+            {cartCount > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>
+                  {cartCount}
+                </Text>
+              </View>
+            )}
+          </Pressable>
+        </View>
 
         {isOffline && (
           <View style={styles.offlineBadge}>
@@ -187,6 +203,7 @@ const CatalogueScreen = ({ navigation }: any) => {
         )}
       </View>
 
+      {/* Courses List */}
       {loading && courses.length === 0 ? (
         <View style={styles.center}>
           <ActivityIndicator
@@ -238,7 +255,6 @@ const CatalogueScreen = ({ navigation }: any) => {
         <View style={styles.modalOverlay}>
           <View style={styles.successModal}>
 
-            {/* Success Icon */}
             <View style={styles.successIconContainer}>
               <Text style={styles.successIcon}>✓</Text>
             </View>
@@ -297,6 +313,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  headerTitleContainer: {
+    flex: 1,
+  },
+
   headerTitle: {
     fontSize: 25,
     fontWeight: 'bold',
@@ -307,6 +327,25 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#64748B',
     marginTop: 5,
+  },
+
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
+  ordersButton: {
+    backgroundColor: '#3157D5',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+  },
+
+  ordersButtonText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 
   cartButton: {
@@ -470,84 +509,84 @@ const styles = StyleSheet.create({
 
   // Success Modal Styles
   modalOverlay: {
-  flex: 1,
-  backgroundColor: 'rgba(15, 23, 42, 0.55)',
-  justifyContent: 'center',
-  alignItems: 'center',
-  padding: 24,
-},
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
 
-successModal: {
-  width: '85%',
-  maxWidth: 310,
-  backgroundColor: '#FFFFFF',
-  borderRadius: 20,
-  padding: 18,
-  alignItems: 'center',
-  elevation: 10,
-},
+  successModal: {
+    width: '85%',
+    maxWidth: 310,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 18,
+    alignItems: 'center',
+    elevation: 10,
+  },
 
-successIconContainer: {
-  width: 45,
-  height: 45,
-  borderRadius: 28,
-  backgroundColor: '#DCFCE7',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginBottom: 12,
-},
+  successIconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 28,
+    backgroundColor: '#DCFCE7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
 
-successIcon: {
-  color: '#16A34A',
-  fontSize: 25,
-  fontWeight: 'bold',
-},
+  successIcon: {
+    color: '#16A34A',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
 
-successTitle: {
-  color: '#172554',
-  fontSize: 19,
-  fontWeight: 'bold',
-  marginBottom: 7,
-},
+  successTitle: {
+    color: '#172554',
+    fontSize: 19,
+    fontWeight: 'bold',
+    marginBottom: 7,
+  },
 
-successMessage: {
-  color: '#64748B',
-  fontSize: 12,
-  lineHeight: 18,
-  textAlign: 'center',
-  marginBottom: 17,
-},
+  successMessage: {
+    color: '#64748B',
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginBottom: 17,
+  },
 
-modalButtons: {
-  width: '100%',
-  gap: 9,
-},
+  modalButtons: {
+    width: '100%',
+    gap: 9,
+  },
 
-continueButton: {
-  backgroundColor: '#3157D5',
-  paddingVertical: 11,
-  borderRadius: 10,
-  alignItems: 'center',
-},
+  continueButton: {
+    backgroundColor: '#3157D5',
+    paddingVertical: 11,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
 
-continueButtonText: {
-  color: '#FFFFFF',
-  fontSize: 13,
-  fontWeight: 'bold',
-},
+  continueButtonText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
 
-viewCartButton: {
-  backgroundColor: '#EEF2FF',
-  paddingVertical: 11,
-  borderRadius: 10,
-  alignItems: 'center',
-},
+  viewCartButton: {
+    backgroundColor: '#EEF2FF',
+    paddingVertical: 11,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
 
-viewCartButtonText: {
-  color: '#3157D5',
-  fontSize: 13,
-  fontWeight: 'bold',
-},
+  viewCartButtonText: {
+    color: '#3157D5',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
 });
 
 export default CatalogueScreen;
