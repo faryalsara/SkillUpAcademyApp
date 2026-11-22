@@ -213,15 +213,14 @@ const CartScreen = ({ navigation }: any) => {
                 ${totalPrice.toFixed(2)}
               </Text>
             </View>
-
-            <Pressable
-              style={styles.checkoutButton}
-              onPress={() => setCheckoutVisible(true)}
-            >
-              <Text style={styles.checkoutText}>
-                Proceed to Checkout
-              </Text>
-            </Pressable>
+<Pressable
+  style={styles.checkoutButton}
+  onPress={() => navigation.navigate('Checkout')}
+>
+  <Text style={styles.checkoutText}>
+    Proceed to Checkout
+  </Text>
+</Pressable>
           </View>
         </>
       )}

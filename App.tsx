@@ -19,46 +19,60 @@ import {
   saveCart,
 } from './src/services/cartStorage';
 
-import { setCartItems } from './src/features/cart/cartSlice';
+import {
+  loadOrders,
+  saveOrders,
+} from './src/services/orderStorage';
 
-// Automatically save cart whenever Redux cart changes
-const CartPersistence = () => {
-  const cartItems = useAppSelector(
-    state => state.cart.items,
-  );
+import { setCartItems } from './src/features/cart/cartSlice';
+import { setOrders } from './src/features/orders/orderSlice';
+
+// Automatically save cart and orders whenever Redux state changes
+const DataPersistence = () => {
+  const cartItems = useAppSelector(state => state.cart.items);
+  const orders = useAppSelector(state => state.orders.orders);
 
   useEffect(() => {
     saveCart(cartItems);
   }, [cartItems]);
+
+  useEffect(() => {
+    saveOrders(orders);
+  }, [orders]);
 
   return null;
 };
 
 // Main application
 const App = () => {
-  const [isCartLoaded, setIsCartLoaded] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Restore cart when application starts
+  // Restore cart and orders when application starts
   useEffect(() => {
-    const initializeCart = async () => {
+    const initializeData = async () => {
       try {
-        const savedItems = await loadCart();
+        const [savedCart, savedOrders] = await Promise.all([
+          loadCart(),
+          loadOrders(),
+        ]);
 
-        store.dispatch(setCartItems(savedItems));
+        store.dispatch(setCartItems(savedCart));
+        store.dispatch(setOrders(savedOrders));
 
-        console.log('Cart restored successfully:', savedItems);
+        console.log('Cart restored:', savedCart);
+        console.log('Orders restored:', savedOrders);
       } catch (error) {
-        console.error('Cart initialization failed:', error);
+        console.error('Data initialization failed:', error);
       } finally {
-        setIsCartLoaded(true);
+        setIsDataLoaded(true);
       }
     };
 
-    initializeCart();
+    initializeData();
   }, []);
 
-  // Show loading indicator until cart is restored
-  if (!isCartLoaded) {
+  // Show loading indicator until data is restored
+  if (!isDataLoaded) {
     return (
       <View
         style={{
@@ -78,7 +92,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <CartPersistence />
+        <DataPersistence />
         <AppNavigator />
       </SafeAreaProvider>
     </Provider>
