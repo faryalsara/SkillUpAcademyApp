@@ -128,5 +128,18 @@ ReqRes is used as a mock API service for testing order submission. The applicati
 - GitHub: [github.com/faryalsara](https://github.com/faryalsara)
 
 ## License
+     
+
+
+
+
+
+## Demo Video
+
+Watch the complete SkillUpAcademyApp demonstration:
+
+[Watch SkillUpAcademyApp Demo](https://drive.google.com/file/d/1kGJkT0tgmE2ZWlBEMAMSpteJC9IQXkpN/view?usp=sharing)
+
+
 
 This project was developed for learning and mobile application development practice.
